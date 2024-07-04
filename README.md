@@ -1,2 +1,3 @@
 # RISE UP
-Task Management and Rewards System
+Task Management with user Authentication
+
