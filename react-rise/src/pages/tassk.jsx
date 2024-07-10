@@ -4,12 +4,13 @@ import Description from "../components/taskscomponents/Description";
 import Note from "../components/taskscomponents/Note";
 import Footer from "../components/taskscomponents/Footer";
 import Task from "../components/taskscomponents/tasks";
+import axios from 'axios';
 
 function Tassk() {
   const [colorno, setColor] = useState(0);
   const [tasks, settasks] = useState([
-    { id: 0, title: "Fixed Task 1", alarm: "5:37 PM", isFixed: true },
-    { id: 1, title: "Fixed Task 2", alarm: "5:40 PM", isFixed: true },
+    { id: 0, title: "Fixed Task 1", alarm: "5:37 PM", isFixed: true},
+    { id: 1, title: "Fixed Task 2", alarm: "5:40 PM", isFixed: true},
   ]);
   const [error, setError] = useState("");
 
@@ -25,15 +26,29 @@ function Tassk() {
 
 
   function addtask(task) {
-    settasks((prev) => {
-      return [...prev, { ...task, id: prev.length, isFixed: false }];
-    });
+    console.log(`Tasks  ${task.title} and ${task.alarm}`,task);
+    settasks((prev) => [...prev, { ...task, id: prev.length, isFixed: false }]);
+  
+    (async () => {
+      try {
+        const params = new URLSearchParams({
+          title: task.title,
+          alarm: task.alarm
+        });
+  
+        const response = await axios.post('/api/tasks', params);
+        console.log('Task added successfully:', response.data);
+      } catch (error) {
+        console.error('Error adding task:', error);
+      }
+    })();
   }
 
   function handledelete(id) {
     settasks((prev) => {
       return prev.filter((item) => item.id !== id);
     });
+    
   }
 
   function handledone(id) {

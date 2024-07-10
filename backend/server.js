@@ -200,6 +200,33 @@ app.get('/api/check-auth', (req, res) => {
   }
 });
 
+app.post('/api/tasks', async (req, res) => {
+  console.log(req.body); 
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+
+  const { title, alarm } = req.body;
+  console.log(title);
+  const userId = req.user.id;
+
+  // Convert isFixed to a boolean
+  const isFixedBoolean = false;
+
+  try {
+    const result = await db.query(
+      'INSERT INTO tasks (title, alarm, isFixed, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
+      [title, alarm, isFixedBoolean, userId]
+    );
+    console.log(result);
+    res.status(201).json(result.rows[0]); // Return the newly created task
+  } catch (error) {
+    console.error('Error adding task:', error);
+    res.status(500).json({ error: 'Failed to add task' });
+  }
+});
+
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-rise/build', 'index.html'));
 });
