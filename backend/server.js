@@ -8,7 +8,7 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const path = require('path');
 
-dotenv.config(); // Load environment variables
+dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -19,7 +19,7 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET, // Use environment variable
+    secret: process.env.SESSION_SECRET, 
     resave: false,
     saveUninitialized: true,
   })
@@ -30,13 +30,12 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, '../react-rise/build')));
 
-// Database connection
 const db = new pg.Client({
-  user: process.env.DB_USER, // Use environment variable
-  host: process.env.DB_HOST, // Use environment variable
-  database: process.env.DB_NAME, // Use environment variable
-  password: process.env.DB_PASSWORD, // Use environment variable
-  port: process.env.DB_PORT, // Use environment variable
+  user: process.env.DB_USER, 
+  host: process.env.DB_HOST, 
+  database: process.env.DB_NAME, 
+  password: process.env.DB_PASSWORD, 
+  port: process.env.DB_PORT, 
 });
 db.connect();
 
@@ -120,7 +119,6 @@ app.post('/logout', (req, res) => {
   });
 });
 
-// Passport configuration
 passport.use(
   "local",
   new LocalStrategy(async (username, password, cb) => {
@@ -150,9 +148,9 @@ passport.use(
 );
 
 passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID, // Use environment variable
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Use environment variable
-  callbackURL: process.env.GOOGLE_CALLBACK_URL, // Use environment variable
+  clientID: process.env.GOOGLE_CLIENT_ID, 
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET, 
+  callbackURL: process.env.GOOGLE_CALLBACK_URL, 
   passReqToCallback: true
 },
 async (request, accessToken, refreshToken, profile, cb) => {
@@ -189,7 +187,7 @@ app.get('/api/check-auth', (req, res) => {
       user: {
         id: req.user.id,
         name: req.user.name,
-        // Include any other user information you want to send to the frontend
+        // information can be sent from here
       }
     });
   } else {
@@ -223,10 +221,7 @@ app.post('/api/tasks', async (req, res) => {
   }
 
   const { title, alarm } = req.body;
-  console.log(title);
   const userId = req.user.id;
-
-  // Convert isFixed to a boolean
   const isFixedBoolean = false;
 
   try {
@@ -235,7 +230,7 @@ app.post('/api/tasks', async (req, res) => {
       [title, alarm, isFixedBoolean, userId]
     );
     console.log(result);
-    res.status(201).json(result.rows[0]); // Return the newly created task
+    res.status(201).json(result.rows[0]); 
   } catch (error) {
     console.error('Error adding task:', error);
     res.status(500).json({ error: 'Failed to add task' });
