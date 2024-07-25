@@ -155,3 +155,10 @@ form button {
   cursor: pointer;
   outline: none;
 }
+.nameclass{
+  text-align: center;
+  color: #c20f0f;
+  padding: 4px;
+  position:relative;
+  font-family:'Lucida Sans';
+}

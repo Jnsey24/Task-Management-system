@@ -8,10 +8,7 @@ import axios from 'axios';
 
 function Tassk() {
   const [colorno, setColor] = useState(0);
-  const [tasks, settasks] = useState([
-    { id: 0, title: "Fixed Task 1", alarm: "5:37 PM", isFixed: true},
-    { id: 1, title: "Fixed Task 2", alarm: "5:40 PM", isFixed: true},
-  ]);
+  const [tasks, settasks] = useState([]);
   const [error, setError] = useState("");
 
   const changecolor = () => {
@@ -23,11 +20,20 @@ function Tassk() {
     color: colorno ? "white" : "black",
     height: "100vh",
   };
-
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get('/api/tasks');
+        settasks(response.data);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+        setError('Failed to fetch tasks.Please Login');
+      }
+    })();
+  }, []);
 
   function addtask(task) {
-    console.log(`Tasks  ${task.title} and ${task.alarm}`,task);
-    settasks((prev) => [...prev, { ...task, id: prev.length, isFixed: false }]);
+    settasks((prev) => {return [...prev, { ...task, id: prev.length, isFixed: false }]});
   
     (async () => {
       try {
@@ -36,8 +42,7 @@ function Tassk() {
           alarm: task.alarm
         });
   
-        const response = await axios.post('/api/tasks', params);
-        console.log('Task added successfully:', response.data);
+       await axios.post('/api/tasks', params);
       } catch (error) {
         console.error('Error adding task:', error);
       }
@@ -48,7 +53,23 @@ function Tassk() {
     settasks((prev) => {
       return prev.filter((item) => item.id !== id);
     });
-    
+
+  }
+
+  async function deletepermanent(id) {
+    try {
+      await axios.delete('/api/tasks',{
+        headers: {
+        'Content-Type': 'application/json',
+      },
+      data: { id }
+    });
+      handledelete(id);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      setError('Failed to delete task');
+      setTimeout(() => setError(''), 3000); // Clear error message after 3 seconds
+    }
   }
 
   function handledone(id) {
@@ -97,7 +118,7 @@ function Tassk() {
           title={item.title}
           alarm={item.alarm}
           isFixed={item.isFixed}
-          ondelete={handledelete}
+          ondelete={deletepermanent}
           oncheck={handledone}
         />
       ))}

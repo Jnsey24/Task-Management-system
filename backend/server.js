@@ -200,6 +200,22 @@ app.get('/api/check-auth', (req, res) => {
   }
 });
 
+app.get('/api/tasks', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+
+  const userId = req.user.id;
+
+  try {
+    const result = await db.query('SELECT * FROM tasks WHERE user_id = $1', [userId]);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({ error: 'Failed to fetch tasks' });
+  }
+});
+
 app.post('/api/tasks', async (req, res) => {
   console.log(req.body); 
   if (!req.isAuthenticated()) {
@@ -226,6 +242,27 @@ app.post('/api/tasks', async (req, res) => {
   }
 });
 
+app.delete('/api/tasks', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+
+  const { id } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const result = await db.query('DELETE FROM tasks WHERE id = $1 AND user_id = $2 RETURNING *', [id, userId]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    res.status(200).json({ message: 'Task deleted successfully', task: result.rows[0] });
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    res.status(500).json({ error: 'Failed to delete task' });
+  }
+});
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-rise/build', 'index.html'));

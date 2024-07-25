@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
     try {
       await login(username, password);
-      navigate('/shop'); // Redirect to the desired page
+      navigate('/shop'); 
     } catch (error) {
       console.error('Error during login:', error);
       alert('Login failed');

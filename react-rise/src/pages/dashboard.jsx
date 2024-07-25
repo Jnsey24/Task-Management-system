@@ -62,7 +62,6 @@ function Dashboard(props) {
           dark mode</button>
           {isloggedin ?(
             <div>
-              <span className="nameclass">Welcome {user.name}</span>
               <Link to="/logout" className="login-button">Logout</Link>
             </div>
              
@@ -73,6 +72,7 @@ function Dashboard(props) {
             </div>
            
           )}
+          {isloggedin ?<span className="nameclass">Welcome {user.name}</span>:<span></span>}
        
       </div>
     </header>
