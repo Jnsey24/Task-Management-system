@@ -85,7 +85,6 @@ app.post("/register", async (req, res) => {
         }
       });
     }
-    siddh
   } catch (err) {
     console.error("Database error:", err);
     res.redirect("/register");
