@@ -13,8 +13,8 @@ const Profile = () => {
         height: "100vh",
       };
   return (
-    <div style={bodycolor} className="container">
-       <Dashboard oncolor={changecolor} colorno={colorno} />
+    <div style={bodycolor} >
+    <Dashboard oncolor={changecolor} className="container" colorno={colorno} />
       <h1>Profile Page</h1>
       <p>Welcome to your Profile Page</p>
     </div>

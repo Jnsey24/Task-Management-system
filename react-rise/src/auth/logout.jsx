@@ -13,9 +13,18 @@ const Logout = () => {
       alert('Logout failed');
     }
   };
+  const logoutclass = {
+    display: "grid",
+    placeItems: "center"
+  };
+ 
 
   return (
-    <button onClick={handleLogout}>Logout</button>
+    <div style={logoutclass}>
+      <p>Are You Sure Want to Logout?</p>
+    <button onClick={handleLogout} className="login-button">Logout</button>
+    </div>
+    
   );
 };
 

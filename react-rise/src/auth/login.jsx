@@ -43,7 +43,7 @@ const Login = () => {
         />
         <button type="submit">Login</button>
       </form>
-      <button onClick={handleGoogleSignIn} style={{ marginTop: '10px' }}>
+      <button onClick={handleGoogleSignIn} className="googlebutton" style={{ marginTop: '10px' }}>
         Sign in with Google
       </button>
       <div style={{ marginTop: '10px' }}>

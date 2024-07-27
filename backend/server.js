@@ -65,7 +65,6 @@ app.post("/register", async (req, res) => {
             "INSERT INTO users (username, password, name, wakeuptime, sleeptime) VALUES ($1, $2, $3, $4, $5) RETURNING *",
             [username, hash, name, wakeuptime, sleeptime]
           );
-          const user = result.rows[0];
           passport.authenticate('local', (err, user, info) => {
             if (err) {
               console.error("Error during authentication:", err);
